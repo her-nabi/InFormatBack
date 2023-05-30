@@ -43,12 +43,10 @@ public class Task implements Serializable {
     @Column(name = "name")
     private String name;
 
-    @NotNull(message = "Поле не должно быть пустым")
     @NotBlank(message = "Поле не должно быть пустым")
     @Column(name = "type")
     private String type;
 
-    @NotNull(message = "Поле не должно быть пустым")
     @NotBlank(message = "Поле не должно быть пустым")
     @Column(name = "answer")
     private String answer;

@@ -39,8 +39,7 @@ public class Image {
 
     private String contentType;
 
-    @Lob
-    private byte[] bytes;
+    private String imagePath;
 
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     private Task task;

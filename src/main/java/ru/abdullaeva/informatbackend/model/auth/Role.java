@@ -29,8 +29,6 @@ public class Role implements Serializable {
     @Column(name = "id")
     private Integer id;
 
-
-    @NotNull(message = "Поле не должно быть пустым")
     @NotBlank(message = "Поле не должно быть пустым")
     @Column(name = "name")
     private String name;
