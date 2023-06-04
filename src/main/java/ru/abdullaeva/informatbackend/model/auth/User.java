@@ -77,9 +77,4 @@ public class User implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "variant_id", referencedColumnName="id"))
     private Set<Variant> variants;
 
-//    @Override
-//    public Collection<? extends GrantedAuthority> getAuthorities() {
-//        return Collections.singleton(new SimpleGrantedAuthority(role.getName()));
-//    }
-
 }
