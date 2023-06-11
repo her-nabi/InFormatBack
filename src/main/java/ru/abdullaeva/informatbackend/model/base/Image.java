@@ -31,14 +31,13 @@ public class Image {
     @Column(name = "id")
     private Integer id;
 
+    @Column(name = "name")
     private String name;
 
-    private String originalFileName;
+    @Column(name = "size")
+    private String size;
 
-    private Long size;
-
-    private String contentType;
-
+    @Column(name = "image_path")
     private String imagePath;
 
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
