@@ -1,5 +1,6 @@
 package ru.abdullaeva.informatbackend.model.base;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,6 +40,7 @@ public class Image {
     @Column(name = "image_path")
     private String imagePath;
 
+    @JsonBackReference
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     private Task task;
 }

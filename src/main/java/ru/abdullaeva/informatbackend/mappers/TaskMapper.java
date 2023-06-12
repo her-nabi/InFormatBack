@@ -13,7 +13,7 @@ public interface TaskMapper {
     TaskDto taskToTaskDto(Task task);
     Task taskDtoToTask(TaskDto task);
     List<Task> taskDtosToTasks(List<TaskDto> task);
-    List<Task> webTaskDtosToTasks(List<WebTaskDto> task);
+    List<TaskDto> webTaskDtosToTasksDto(List<WebTaskDto> task);
     TaskDto webTaskDtoToTask(WebTaskDto task);
 
 }

@@ -8,5 +8,6 @@ import ru.abdullaeva.informatbackend.model.base.Variant;
 public interface VariantMapper {
 
     VariantDto variantToVariantDto(Variant variant);
+    Variant variantDtoToVariant(VariantDto variant);
 
 }

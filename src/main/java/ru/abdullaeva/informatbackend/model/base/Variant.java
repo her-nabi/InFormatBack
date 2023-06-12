@@ -40,7 +40,7 @@ public class Variant implements Serializable {
     private String name;
 
     @JsonBackReference
-    @ManyToMany(mappedBy = "variants", fetch = FetchType.LAZY,
+    @ManyToMany(mappedBy = "variants", fetch = FetchType.EAGER,
             cascade = CascadeType.DETACH)
     private List<Task> tasks;
 
