@@ -1,41 +1,60 @@
 package ru.abdullaeva.informatbackend.mappers;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.abdullaeva.informatbackend.dto.AdminJournalDto;
+import ru.abdullaeva.informatbackend.dto.web.AdminJournalDto;
+import ru.abdullaeva.informatbackend.dto.TaskDto;
 import ru.abdullaeva.informatbackend.dto.UserDto;
-import ru.abdullaeva.informatbackend.dto.UserJournalDto;
-import ru.abdullaeva.informatbackend.dto.UserVariantDto;
-import ru.abdullaeva.informatbackend.repository.UserRepository;
-import ru.abdullaeva.informatbackend.repository.VariantRepository;
+import ru.abdullaeva.informatbackend.dto.web.UserJournalDto;
+import ru.abdullaeva.informatbackend.dto.web.UserVariantDto;
+import ru.abdullaeva.informatbackend.dto.VariantDto;
+import ru.abdullaeva.informatbackend.dto.web.VariantJournalDto;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
-@RequiredArgsConstructor
 public class JournalMapper {
-    private final UserRepository userRepository;
-    private final VariantRepository variantRepository;
 
     public UserJournalDto toUserJournalDto(UserDto user) {
-        UserVariantDto userVariant = new UserVariantDto();
-        userVariant.setName(user.getName());
-        userVariant.setVariants(user.getVariants());
-        return new UserJournalDto(userVariant);
+        UserVariantDto userVariantDto = new UserVariantDto();
+        Integer score = 0;
+        List<VariantJournalDto> variantJournalDtoSet = new ArrayList<>();
+        for (VariantDto v : user.getVariants()) {
+            VariantJournalDto variantJournalDto = new VariantJournalDto();
+            for (TaskDto t : v.getTasks()) {
+                score += t.getMark();
+            }
+            variantJournalDto.setName(v.getName());
+            variantJournalDto.setResult(score);
+            variantJournalDtoSet.add(variantJournalDto);
+            score = 0;
+        }
+        userVariantDto.setVariants(variantJournalDtoSet);
+        userVariantDto.setName(user.getName());
+        userVariantDto.setSurname(user.getSurname());
+        return new UserJournalDto(userVariantDto);
 
     }
 
     public AdminJournalDto toAdminJournalDto(List<UserDto> users) {
         List<UserVariantDto> userVariantDtoList = new ArrayList<>();
-        if (!users.isEmpty()) {
-            for(UserDto userDto: users) {
-                UserVariantDto userVariant = new UserVariantDto();
-                userVariant.setName(userDto.getName());
-                userVariant.setSurname(userDto.getSurname());
-                userVariant.setVariants(userDto.getVariants());
-                userVariantDtoList.add(userVariant);
+        Integer score = 0;
+        for (UserDto u : users) {
+            UserVariantDto userVariantDto = new UserVariantDto();
+            List<VariantJournalDto> variantJournalDtoSet = new ArrayList<>();
+            for (VariantDto v : u.getVariants()) {
+                VariantJournalDto variantJournalDto = new VariantJournalDto();
+                for (TaskDto t : v.getTasks()) {
+                    score += t.getMark();
+                }
+                variantJournalDto.setName(v.getName());
+                variantJournalDto.setResult(score);
+                variantJournalDtoSet.add(variantJournalDto);
+                score = 0;
             }
+            userVariantDto.setVariants(variantJournalDtoSet);
+            userVariantDto.setName(u.getName());
+            userVariantDto.setSurname(u.getSurname());
         }
         return new AdminJournalDto(userVariantDtoList);
     }

@@ -1,11 +1,11 @@
 package ru.abdullaeva.informatbackend.service.interf;
 
 import ru.abdullaeva.informatbackend.dto.VariantDto;
-import ru.abdullaeva.informatbackend.model.base.Variant;
+import ru.abdullaeva.informatbackend.dto.web.WebVariantDto;
 
 public interface VariantService {
 
-    boolean createVariant(Variant variant);
+    boolean createVariant(WebVariantDto variant);
 
     VariantDto findById(Integer id);
 }

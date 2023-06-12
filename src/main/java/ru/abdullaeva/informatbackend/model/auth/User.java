@@ -1,17 +1,17 @@
 package ru.abdullaeva.informatbackend.model.auth;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import ru.abdullaeva.informatbackend.model.base.Variant;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,10 +22,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Set;
-
+import java.util.List;
 
 @Entity
 @Getter
@@ -70,11 +67,11 @@ public class User implements Serializable {
     @Column(name = "blocked")
     private boolean blocked;
 
-//    @JsonManagedReference
-    @ManyToMany
+    @JsonManagedReference
+    @ManyToMany(cascade= CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "user_variant",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName="id"),
             inverseJoinColumns = @JoinColumn(name = "variant_id", referencedColumnName="id"))
-    private Set<Variant> variants;
+    private List<Variant> variants;
 
 }

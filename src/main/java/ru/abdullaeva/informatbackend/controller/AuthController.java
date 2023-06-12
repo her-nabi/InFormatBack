@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.abdullaeva.informatbackend.dto.AuthenticationRequestDto;
+import ru.abdullaeva.informatbackend.dto.web.AuthenticationRequestDto;
 import ru.abdullaeva.informatbackend.dto.UserDto;
 import ru.abdullaeva.informatbackend.security.jwt.JwtTokenProvider;
 import ru.abdullaeva.informatbackend.service.interf.UserService;

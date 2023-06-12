@@ -20,13 +20,13 @@ public class TaskServiceImpl implements TaskService {
     private final TaskMapper taskMapper;
 
     @Override
-    public boolean createTask(Task task) {
+    public boolean createTask(TaskDto task) {
         if(task == null) {
             log.warn("In method \"createTask\": Task is empty!");
             return false;
         }
         try {
-            taskRepository.save(task);
+            taskRepository.save(taskMapper.taskDtoToTask(task));
             return true;
         }
         catch (Exception e ) {

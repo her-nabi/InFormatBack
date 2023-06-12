@@ -4,7 +4,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import ru.abdullaeva.informatbackend.dto.UserDto;
 import ru.abdullaeva.informatbackend.model.auth.Role;
-import ru.abdullaeva.informatbackend.model.auth.User;
 
 import java.util.HashSet;
 import java.util.List;

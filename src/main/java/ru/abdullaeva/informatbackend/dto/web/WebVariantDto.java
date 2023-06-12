@@ -1,4 +1,4 @@
-package ru.abdullaeva.informatbackend.dto;
+package ru.abdullaeva.informatbackend.dto.web;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,11 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties
-public class AdminJournalDto {
-   private List<UserVariantDto> userVariantDtoList;
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class WebVariantDto {
+
+    private String name;
+    private List<WebTaskDto> tasks;
+    private List<Integer> users;
+
 }

@@ -5,11 +5,19 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class WebUserDto {
+public class WebTaskDto {
+
     private String name;
-    private String surname;
+    private String type;
+    private String answer;
+    private String description;
+    private Integer mark;
+    private List<WebImageDto> images;
+
 }

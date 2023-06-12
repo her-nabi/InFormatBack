@@ -77,6 +77,4 @@ public class JwtUser implements UserDetails {
         return login;
     }
 
-
-
 }

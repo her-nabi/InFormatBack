@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.abdullaeva.informatbackend.dto.TaskDto;
-import ru.abdullaeva.informatbackend.model.base.Task;
+
 
 import ru.abdullaeva.informatbackend.service.interf.TaskService;
 
@@ -23,8 +23,8 @@ public class TaskController {
         return taskService.findTaskById(id);
     }
 
-    @PostMapping("/create/variant")
-    public boolean createVariant(@RequestBody Task task) {
+    @PostMapping("/create/task")
+    public boolean createTask(@RequestBody TaskDto task) {
         return taskService.createTask(task);
     }
 }

@@ -6,5 +6,7 @@ import ru.abdullaeva.informatbackend.model.base.Variant;
 
 @Mapper(componentModel = "spring")
 public interface VariantMapper {
+
     VariantDto variantToVariantDto(Variant variant);
+
 }

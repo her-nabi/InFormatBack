@@ -3,10 +3,18 @@ package ru.abdullaeva.informatbackend.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.abdullaeva.informatbackend.dto.UserDto;
+import ru.abdullaeva.informatbackend.dto.ImageDto;
+import ru.abdullaeva.informatbackend.dto.TaskDto;
 import ru.abdullaeva.informatbackend.dto.VariantDto;
+import ru.abdullaeva.informatbackend.dto.web.WebImageDto;
+import ru.abdullaeva.informatbackend.dto.web.WebTaskDto;
+import ru.abdullaeva.informatbackend.dto.web.WebVariantDto;
+import ru.abdullaeva.informatbackend.mappers.ImageMapper;
+import ru.abdullaeva.informatbackend.mappers.TaskMapper;
 import ru.abdullaeva.informatbackend.mappers.VariantMapper;
+import ru.abdullaeva.informatbackend.mappers.WebVariantMapper;
 import ru.abdullaeva.informatbackend.model.auth.User;
+import ru.abdullaeva.informatbackend.model.base.Image;
 import ru.abdullaeva.informatbackend.model.base.Task;
 import ru.abdullaeva.informatbackend.model.base.Variant;
 import ru.abdullaeva.informatbackend.repository.TaskRepository;
@@ -16,7 +24,6 @@ import ru.abdullaeva.informatbackend.service.interf.VariantService;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @Slf4j
@@ -27,23 +34,46 @@ public class VariantServiceImpl implements VariantService {
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
     private final VariantMapper variantMapper;
+    private final TaskMapper taskMapper;
+    private final ImageMapper imageMapper;
+    private final WebVariantMapper webVariantMapper;
 
     @Override
-    public boolean createVariant(Variant variant) {
+    public boolean createVariant(WebVariantDto variant) {
         try {
-            Set<Task> tasks = variant.getTasks();
+            Variant newVariant = new Variant();
+            List<WebTaskDto> tasks = variant.getTasks();
             if (!tasks.isEmpty()) {
-                Set<Task> newTasks = (Set<Task>)taskRepository.saveAll(tasks);
-                variant.setTasks(newTasks);
-                List<UserDto> users = new ArrayList<>();
-                for(User u: variant.getUsers()) {
-                   User user = userRepository.findById(u.getId()).orElse(null);
+                List<TaskDto> taskDtos = new ArrayList<>();
+                for(WebTaskDto webTaskDto : tasks) {
+                    TaskDto taskDto = taskMapper.webTaskDtoToTask(webTaskDto);
+//                    List<ImageDto> imageDtos = new ArrayList<>();
+//                    for (WebImageDto webImageDto : webTaskDto.getImages()) {
+//                        ImageDto imageDto = imageMapper.webImageDtoToImageDto(webImageDto);
+//                        imageDtos.add(imageDto);
+//                    }
+                    taskDtos.add(taskDto);
+                }
+                List<VariantDto> variantDtos = new ArrayList<>();
+                VariantDto variantDto = webVariantMapper.webVariantToVariantDto(variant, taskDtos);
+                variantDtos.add(variantDto);
+                for (TaskDto taskDto: taskDtos) {
+                    taskDto.setVariants(variantDtos);
+                }
+                List<Task> newTasks = taskRepository.saveAll(taskMapper.taskDtosToTasks(taskDtos));
+                newVariant.setTasks(newTasks);
+                newVariant.setName(variant.getName());
+                List<User> users = new ArrayList<>();
+                for(Integer u: variant.getUsers()) {
+                   User user = userRepository.findById(u).orElse(null);
                    if(user != null) {
-                       user.getVariants().add(variant);
-                       userRepository.save(user);
+                       user.getVariants().add(newVariant);
+                       User newUser = userRepository.save(user);
+                       users.add(newUser);
                    }
                 }
-                variantRepository.save(variant);
+                newVariant.setUsers(users);
+                variantRepository.save(newVariant);
                 return true;
             }
         }

@@ -1,5 +1,6 @@
 package ru.abdullaeva.informatbackend.model.base;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,11 +20,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "task")
@@ -57,10 +56,13 @@ public class Task implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "task")
     private List<Image> images;
 
-//    @JsonManagedReference
+    @Column(name = "mark")
+    private Integer mark;
+
+    @JsonManagedReference
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "task_variant",
             joinColumns = @JoinColumn(name="task_id"),
             inverseJoinColumns = @JoinColumn(name="variant_id"))
-    private Set<Variant> variants = new HashSet<>();
+    private List<Variant> variants = new ArrayList<>();
 }

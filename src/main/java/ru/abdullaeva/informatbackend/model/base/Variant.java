@@ -1,5 +1,6 @@
 package ru.abdullaeva.informatbackend.model.base;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,8 +19,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
-import java.util.Set;
-
+import java.util.List;
 
 @Entity
 @Table(name = "variant")
@@ -39,13 +39,13 @@ public class Variant implements Serializable {
     @Column(name = "name")
     private String name;
 
-//    @JsonBackReference
+    @JsonBackReference
     @ManyToMany(mappedBy = "variants", fetch = FetchType.LAZY,
             cascade = CascadeType.DETACH)
-    private Set<Task> tasks;
+    private List<Task> tasks;
 
-//    @JsonBackReference
+    @JsonBackReference
     @ManyToMany(mappedBy = "variants")
-    private Set<User> users ;
+    private List<User> users ;
 
 }

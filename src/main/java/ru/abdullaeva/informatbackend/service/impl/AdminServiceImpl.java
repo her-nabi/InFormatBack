@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.abdullaeva.informatbackend.dto.AdminJournalDto;
+import ru.abdullaeva.informatbackend.dto.web.AdminJournalDto;
+import ru.abdullaeva.informatbackend.dto.UserDto;
+import ru.abdullaeva.informatbackend.dto.web.WebNewUserDto;
 import ru.abdullaeva.informatbackend.mappers.JournalMapper;
 import ru.abdullaeva.informatbackend.mappers.UserMapper;
 import ru.abdullaeva.informatbackend.model.auth.Role;
@@ -25,17 +27,24 @@ public class AdminServiceImpl implements AdminService {
     private final UserMapper userMapper;
     private static final Role role = new Role(1, RoleEnum.ROLE_USER.name());
 
-    public boolean createUser(User user) {
+    public boolean createUser(WebNewUserDto user) {
         String login = user.getLogin();
         if (userRepository.findByLogin(login) != null) {
             log.error("In method \"createUser\": User with login {} already exist. ", login);
             return false;
         }
-        user.setActive(false);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRole(role);
+        User newUser = User.builder()
+                .active(false)
+                .blocked(false)
+                .login(user.getLogin())
+                .password((passwordEncoder.encode(user.getPassword())))
+                .role(role)
+                .name(user.getName())
+                .surname(user.getSurname())
+                .phone(user.getPhone())
+                .build();
         log.info("In method \"createUser\": saving new User with login: {}", login);
-        userRepository.save(user);
+        userRepository.save(newUser);
         return true;
     }
 
@@ -52,8 +61,7 @@ public class AdminServiceImpl implements AdminService {
                 log.info("In method \"banUser\": unban user with id = {}; login: {}", user.getId(), user.getLogin());
             }
             userRepository.save(user);
-        }
-        else {
+        } else {
             log.info("In method \"banUser\": user with id {} not found", id);
             return false;
         }
@@ -62,8 +70,8 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public boolean resetPass(Integer id) {
-        User user =  userRepository.findById(id).orElse(null);
-        if(user != null) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user != null) {
             user.setPassword(passwordEncoder.encode("1"));
             user.setActive(false);
             log.info("In method \"resetPass\": reset password of user with id {}", id);
@@ -75,9 +83,9 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public boolean editUser(User user) {
+    public boolean editUser(UserDto user) {
         if (user != null) {
-            userRepository.save(user);
+            userRepository.save(userMapper.userDtoToUser(user));
             return true;
         }
         return false;
@@ -85,7 +93,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public AdminJournalDto getAdminJournal() {
-       List<User> user = userRepository.findAll();
-       return journalMapper.toAdminJournalDto(userMapper.userListToUserDtoList(user));
+        List<User> user = userRepository.findAll();
+        return journalMapper.toAdminJournalDto(userMapper.userListToUserDtoList(user));
     }
 }

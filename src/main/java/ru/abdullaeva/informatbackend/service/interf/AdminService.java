@@ -1,19 +1,19 @@
 package ru.abdullaeva.informatbackend.service.interf;
 
 
-import ru.abdullaeva.informatbackend.dto.AdminJournalDto;
+import ru.abdullaeva.informatbackend.dto.web.AdminJournalDto;
 import ru.abdullaeva.informatbackend.dto.UserDto;
-import ru.abdullaeva.informatbackend.model.auth.User;
+import ru.abdullaeva.informatbackend.dto.web.WebNewUserDto;
 
 public interface AdminService {
 
-    boolean createUser(User user);
+    boolean createUser(WebNewUserDto user);
 
     boolean banUser(Integer id);
 
     boolean resetPass(Integer id);
 
-    boolean editUser(User user);
+    boolean editUser(UserDto user);
 
     AdminJournalDto getAdminJournal();
 }

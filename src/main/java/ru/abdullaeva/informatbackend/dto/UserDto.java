@@ -6,13 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.abdullaeva.informatbackend.model.auth.Role;
 
-import java.util.Set;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties
 public class UserDto {
+
     private Integer id;
     private Role role;
     private String login;
@@ -22,5 +23,6 @@ public class UserDto {
     private String phone;
     private boolean active;
     private boolean blocked;
-    private Set<VariantDto> variants;
+    private List<VariantDto> variants;
+
 }
