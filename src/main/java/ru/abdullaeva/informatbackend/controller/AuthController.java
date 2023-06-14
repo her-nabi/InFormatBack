@@ -31,8 +31,8 @@ public class AuthController {
     @Operation(summary = "Аутентификация пользователя" ,description = "Позволяет аутентифицировать пользователя приложения")
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthenticationRequestDto requestDto) {
+        Map<Object, Object> response = new HashMap<>();
         try {
-
             String login = requestDto.getLogin();
             UserDto user = userService.findByLogin(login);
 
@@ -42,19 +42,21 @@ public class AuthController {
 
             if(!user.isActive()) {
                 userService.changePassword(user, requestDto.getPassword());
+                response.put("password", "changed");
             }
 
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login, requestDto.getPassword()));
 
             String token = jwtTokenProvider.createToken(login, user.getRole());
 
-            Map<Object, Object> response = new HashMap<>();
+
             response.put("login", login);
             response.put("token", token);
 
             return ResponseEntity.ok(response);
         } catch (AuthenticationException e) {
-            throw new BadCredentialsException("Invalid username or password");
+            response.put("error", "Invalid login data or user is blocked");
+            return ResponseEntity.ok(response);
         }
     }
 }

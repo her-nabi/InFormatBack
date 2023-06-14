@@ -7,5 +7,5 @@ public interface VariantService {
 
     boolean createVariant(WebVariantDto variant);
 
-    VariantDto findById(Integer id);
+    WebVariantDto findById(Integer id);
 }

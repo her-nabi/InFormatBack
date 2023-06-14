@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class WebImageDto {
 
     private String name;
-    private Long size;
+    private String size;
     private String imagePath;
 
 }

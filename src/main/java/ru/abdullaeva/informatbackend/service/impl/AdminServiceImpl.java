@@ -24,8 +24,8 @@ public class AdminServiceImpl implements AdminService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JournalMapper journalMapper;
-    private final UserMapper userMapper;
-    private static final Role role = new Role(1, RoleEnum.ROLE_USER.name());
+
+    private static final Role role = new Role(2, RoleEnum.ROLE_USER.name());
 
     public boolean createUser(WebNewUserDto user) {
         String login = user.getLogin();
@@ -54,10 +54,11 @@ public class AdminServiceImpl implements AdminService {
         if (user != null) {
             if (user.isActive()) {
                 user.setActive(false);
-                user.setBlocked(false);
+                user.setBlocked(true);
                 log.info("In method \"banUser\": ban user with id = {}; login: {}", user.getId(), user.getLogin());
             } else {
                 user.setActive(true);
+                user.setBlocked(false);
                 log.info("In method \"banUser\": unban user with id = {}; login: {}", user.getId(), user.getLogin());
             }
             userRepository.save(user);
@@ -74,6 +75,7 @@ public class AdminServiceImpl implements AdminService {
         if (user != null) {
             user.setPassword(passwordEncoder.encode("1"));
             user.setActive(false);
+            user.setBlocked(false);
             log.info("In method \"resetPass\": reset password of user with id {}", id);
             userRepository.save(user);
             return true;
@@ -85,7 +87,25 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public boolean editUser(UserDto user) {
         if (user != null) {
-            userRepository.save(userMapper.userDtoToUser(user));
+            User updateUser = userRepository.findById(user.getId()).orElse(null);
+            if (updateUser != null) {
+                if (user.getName() != null) {
+                    updateUser.setName(user.getName());
+                }
+                if (user.getSurname() != null) {
+                    updateUser.setSurname(user.getSurname());
+                }
+                if (user.getLogin() != null) {
+                    updateUser.setLogin(user.getLogin());
+                }
+                if (user.getPassword() != null) {
+                    updateUser.setPassword(passwordEncoder.encode(user.getPassword()));
+                }
+                if (user.getPhone() != null) {
+                    updateUser.setPhone(user.getPhone());
+                }
+                userRepository.save(updateUser);
+            }
             return true;
         }
         return false;
@@ -93,7 +113,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public AdminJournalDto getAdminJournal() {
-        List<User> user = userRepository.findAll();
-        return journalMapper.toAdminJournalDto(userMapper.userListToUserDtoList(user));
+        List<User> user = userRepository.findAll().stream().filter(u -> u.getRole().getName().equals(RoleEnum.ROLE_USER.toString())).toList();
+        return journalMapper.toAdminJournalDto(user);
     }
 }

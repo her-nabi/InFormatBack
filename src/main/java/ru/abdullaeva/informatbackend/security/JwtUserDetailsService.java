@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.abdullaeva.informatbackend.dto.UserDto;
-import ru.abdullaeva.informatbackend.model.auth.User;
+import ru.abdullaeva.informatbackend.exception.JwtAuthenticationException;
 import ru.abdullaeva.informatbackend.security.jwt.JwtUser;
 import ru.abdullaeva.informatbackend.security.jwt.JwtUserFactory;
 import ru.abdullaeva.informatbackend.service.interf.UserService;
@@ -22,13 +22,16 @@ public class JwtUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        UserDto user = userService.findByLogin(login);
+    public UserDetails loadUserByUsername(String login) {
+        try {
+            UserDto user = userService.findByLogin(login);
+            JwtUser jwtUser = JwtUserFactory.create(user);
+            log.info("In method \"loadUserByUsername\" user with login: {} successfully loaded", login);
 
-        JwtUser jwtUser = JwtUserFactory.create(user);
+            return jwtUser;
+        } catch (Exception e) {
+                throw new JwtAuthenticationException("User with login: " + login + " is banned");
+        }
 
-        log.info("In method \"loadUserByUsername\" user with login: {} successfully loaded", login);
-
-        return jwtUser;
     }
 }

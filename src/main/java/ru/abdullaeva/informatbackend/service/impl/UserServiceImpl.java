@@ -10,14 +10,17 @@ import ru.abdullaeva.informatbackend.dto.web.UserJournalDto;
 import ru.abdullaeva.informatbackend.dto.web.WebUserDto;
 import ru.abdullaeva.informatbackend.mappers.JournalMapper;
 import ru.abdullaeva.informatbackend.mappers.UserMapper;
+import ru.abdullaeva.informatbackend.mappers.VariantMapper;
 import ru.abdullaeva.informatbackend.model.auth.User;
+import ru.abdullaeva.informatbackend.model.base.Variant;
 import ru.abdullaeva.informatbackend.model.enums.RoleEnum;
 import ru.abdullaeva.informatbackend.repository.UserRepository;
+import ru.abdullaeva.informatbackend.repository.VariantRepository;
 import ru.abdullaeva.informatbackend.service.interf.UserService;
 
 
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 @Slf4j
@@ -27,13 +30,15 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final JournalMapper journalMapper;
     private final PasswordEncoder passwordEncoder;
+    private final VariantRepository variantRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, JournalMapper journalMapper,@Lazy PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, JournalMapper journalMapper,@Lazy PasswordEncoder passwordEncoder, VariantRepository variantRepository) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.journalMapper = journalMapper;
         this.passwordEncoder = passwordEncoder;
+        this.variantRepository = variantRepository;
     }
 
     @Override
@@ -47,8 +52,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserJournalDto getUserJournal(Integer id) {
-        UserDto user = findUserById(id);
-        return journalMapper.toUserJournalDto(user);
+        try {
+            List<Variant> variants = variantRepository.findAllByUsersId(id);
+            if (!variants.isEmpty()) {
+                User user = userRepository.findById(id).orElse(null);
+                return journalMapper.toUserJournalDto(user, variants);
+            }
+        }
+        catch (Exception e) {
+            throw new NullPointerException("");
+        }
+        return new UserJournalDto();
     }
 
     @Override
@@ -59,12 +73,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto findByLogin(String login) {
-        return userMapper.userToUserDto(userRepository.findByLogin(login));
-    }
-
-    private UserDto findUserById(Integer userId) {
-        Optional<User> user = userRepository.findById(userId);
-        return userMapper.userToUserDto(user.orElseGet(User::new));
+        UserDto user = userMapper.userToUserDto(userRepository.findByLogin(login));
+        if (user == null) {
+            log.error("User with login: " + login + " not found");
+        }
+        return  user;
     }
 
 }

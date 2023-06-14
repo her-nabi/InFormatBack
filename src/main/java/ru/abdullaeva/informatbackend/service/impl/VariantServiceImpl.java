@@ -76,14 +76,14 @@ public class VariantServiceImpl implements VariantService {
     }
 
     @Override
-    public VariantDto findById(Integer id) {
+    public WebVariantDto findById(Integer id) {
         Variant variant = variantRepository.findById(id).orElse(null);
         if(variant != null) {
-            return variantMapper.variantToVariantDto(variant);
+            return webVariantMapper.variantToWebVariantDto(variant);
         }
         else {
             log.warn("In method \"findById\": variant with id {} not found", id);
         }
-        return new VariantDto();
+        return new WebVariantDto();
     }
 }

@@ -14,5 +14,5 @@ import java.util.List;
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AdminJournalDto {
-   private List<UserVariantDto> userVariantDtoList;
+   private List<UserJournalDto> userJournalDtoList;
 }

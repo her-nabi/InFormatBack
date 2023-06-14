@@ -9,5 +9,4 @@ public interface VariantMapper {
 
     VariantDto variantToVariantDto(Variant variant);
     Variant variantDtoToVariant(VariantDto variant);
-
 }

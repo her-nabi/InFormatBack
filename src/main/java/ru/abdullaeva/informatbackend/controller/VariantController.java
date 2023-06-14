@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.abdullaeva.informatbackend.dto.VariantDto;
 
+import ru.abdullaeva.informatbackend.dto.web.WebVariantDto;
 import ru.abdullaeva.informatbackend.service.interf.VariantService;
 
 @RestController
@@ -17,7 +18,7 @@ public class VariantController {
     private final VariantService variantService;
 
     @GetMapping("/{id}")
-    public VariantDto findVariantById(@PathVariable("id") Integer id) {
+    public WebVariantDto findVariantById(@PathVariable("id") Integer id) {
         return variantService.findById(id);
     }
 }

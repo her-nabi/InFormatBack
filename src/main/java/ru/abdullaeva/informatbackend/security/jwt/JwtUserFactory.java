@@ -26,7 +26,8 @@ public final class JwtUserFactory {
                 user.getId(),
                 user.getLogin(),
                 user.getPassword(),
-                mapToGrantedAuthorities(hashSet)
+                mapToGrantedAuthorities(hashSet),
+                user.isBlocked()
         );
     }
 

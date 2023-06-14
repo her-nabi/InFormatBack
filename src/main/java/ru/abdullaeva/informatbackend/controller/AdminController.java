@@ -39,31 +39,43 @@ public class AdminController {
     }
 
     @PostMapping("/registration")
-    public boolean createUser(@RequestBody WebNewUserDto user) {
-        return adminService.createUser(user);
+    public String createUser(@RequestBody WebNewUserDto user) {
+        if (adminService.createUser(user)) {
+            return "User was created";
+        }
+        return "User wasn't created";
     }
 
     @GetMapping("/ban/{id}")
-    public boolean userBan(@PathVariable("id") Integer id) {
-        return adminService.banUser(id);
+    public String userBan(@PathVariable("id") Integer id) {
+        if (adminService.banUser(id)) {
+            return "Ban user";
+        }
+        return "Unban user";
     }
 
     @GetMapping("/edit/{id}")
-    public boolean resetPassword(@PathVariable("id") Integer id) {
-        return adminService.resetPass(id);
+    public String resetPassword(@PathVariable("id") Integer id) {
+        if (adminService.resetPass(id)) {
+            return "Completely";
+        }
+        return "Password wasn't reset";
     }
 
     @PostMapping("/edit")
     public String userEdit(@RequestBody UserDto user) {
-        if(adminService.editUser(user)) {
+        if (adminService.editUser(user)) {
             return "User update";
         }
         return "User not update";
     }
 
     @PostMapping("/create/variant")
-    public boolean createVariant(@RequestBody WebVariantDto variant) {
-        return variantService.createVariant(variant);
+    public String createVariant(@RequestBody WebVariantDto variant) {
+        if (variantService.createVariant(variant)) {
+            return "Variant created";
+        }
+        return "Variant wasn't created";
     }
 
 }

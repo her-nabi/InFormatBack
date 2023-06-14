@@ -12,16 +12,15 @@ public class JwtUser implements UserDetails {
     private final String login;
     private final String password;
     private final Collection<? extends GrantedAuthority> authorities;
+    private final boolean blocked;
 
-    public JwtUser(Integer id,
-                   String login,
-                   String password,
-                   Collection<? extends GrantedAuthority> authorities)
+    public JwtUser(Integer id, String login, String password, Collection<? extends GrantedAuthority> authorities, boolean blocked)
     {
         this.id = id;
         this.login = login;
         this.password = password;
         this.authorities = authorities;
+        this.blocked = blocked;
     }
 
     @Override
@@ -61,7 +60,7 @@ public class JwtUser implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return !blocked;
     }
 
     @JsonIgnore
