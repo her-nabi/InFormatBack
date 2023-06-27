@@ -50,14 +50,14 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public boolean banUser(Integer id) {
+        boolean bunUnban = false;
         User user = userRepository.findById(id).orElse(null);
         if (user != null) {
             if (user.isActive()) {
-                user.setActive(false);
                 user.setBlocked(true);
                 log.info("In method \"banUser\": ban user with id = {}; login: {}", user.getId(), user.getLogin());
+                bunUnban = true;
             } else {
-                user.setActive(true);
                 user.setBlocked(false);
                 log.info("In method \"banUser\": unban user with id = {}; login: {}", user.getId(), user.getLogin());
             }
@@ -66,7 +66,7 @@ public class AdminServiceImpl implements AdminService {
             log.info("In method \"banUser\": user with id {} not found", id);
             return false;
         }
-        return true;
+        return bunUnban;
     }
 
     @Override
